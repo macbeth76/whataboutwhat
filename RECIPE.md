@@ -121,6 +121,45 @@ Review the project, fix gaps, and harden the foundation.
 
 **Result: 11 E2E tests passing + 18 unit tests.**
 
+## Step 6: Add backend auth microservice (Java/Spring Boot)
+Create a JWT-based authentication microservice under `backend/auth-service`.
+
+**Stack:** Java 17, Spring Boot 3.5, Spring Security, Spring Data JPA, H2, JJWT
+
+**API Endpoints:**
+- `POST /api/auth/register` — Register a new user (username, email, password)
+- `POST /api/auth/login` — Login and receive a JWT token
+- `GET /api/auth/me` — Get current user info (requires Bearer token)
+
+**Architecture:**
+```
+backend/auth-service/
+├── src/main/java/com/wiseowltech/auth/
+│   ├── config/        # SecurityConfig, JwtAuthFilter, AppConfig
+│   ├── controller/    # AuthController, GlobalExceptionHandler
+│   ├── dto/           # Request/Response records
+│   ├── model/         # User entity (JPA)
+│   ├── repository/    # UserRepository (Spring Data)
+│   └── service/       # AuthService, JwtService
+└── Dockerfile         # Multi-stage Maven build
+```
+
+**Tests (16 total, all passing):**
+- JwtService: token generation, username extraction, validation (5 tests)
+- AuthController: register, login, /me with valid/invalid tokens (10 tests)
+- Context loads (1 test)
+
+**Key gotchas:**
+- **Circular dependency:** `JwtAuthFilter` needs `UserDetailsService`, `SecurityConfig` needs `JwtAuthFilter`. Fix: move `UserDetailsService` and `PasswordEncoder` beans to separate `AppConfig` class.
+- **403 vs 401:** Spring Security returns 403 for unauthenticated by default. Fix: add custom `authenticationEntryPoint` returning 401.
+
+**Run auth tests:**
+```
+cd backend/auth-service && mvn test
+```
+
+**Result: 16 auth tests passing.**
+
 ---
 
 *This recipe is updated as the project evolves. Each step captures what we did and why.*

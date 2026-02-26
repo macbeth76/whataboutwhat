@@ -1,4 +1,11 @@
 services:
+  auth:
+    build:
+      context: ./backend/auth-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+
   app:
     platform: linux/amd64
     build:
@@ -8,6 +15,9 @@ services:
         GIT_HASH: ${GIT_HASH:-dev}
     ports:
       - "4200:4200"
+    depends_on:
+      auth:
+        condition: service_started
 
   test:
     platform: linux/amd64
