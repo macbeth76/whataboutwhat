@@ -1,0 +1,23 @@
+services:
+  app:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+      args:
+        GIT_HASH: ${GIT_HASH:-dev}
+    ports:
+      - "4200:4200"
+
+  test:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      - APP_URL=http://app:4200
+    depends_on:
+      app:
+        condition: service_started
+    volumes:
+      - ./tests:/app/tests

@@ -1,0 +1,44 @@
+FROM node:20-bookworm-slim
+
+# Install deps for Chrome and Firefox
+RUN apt-get update && apt-get install -y \
+    wget \
+    gnupg \
+    ca-certificates \
+    fonts-liberation \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libcups2 \
+    libdbus-1-3 \
+    libdrm2 \
+    libgbm1 \
+    libgtk-3-0 \
+    libnspr4 \
+    libnss3 \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    xdg-utils \
+    firefox-esr \
+    --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY package.json package-lock.json* ./
+
+ENV PUPPETEER_CACHE_DIR=/home/node/.cache/puppeteer
+RUN npm install
+RUN npx puppeteer browsers install chrome
+
+COPY jest.e2e.config.js ./
+COPY tests/ ./tests/
+
+RUN apt-get update && apt-get install -y wget --no-install-recommends && rm -rf /var/lib/apt/lists/*
+
+RUN chmod +x ./tests/wait-for-app.sh
+
+ENTRYPOINT ["./tests/wait-for-app.sh"]
+CMD ["npx", "jest", "--config", "jest.e2e.config.js", "--verbose"]
