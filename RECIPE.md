@@ -52,6 +52,45 @@ Write failing E2E tests first, then build Angular components to make them pass.
 
 **Result: 9 tests, 9 passing.**
 
+## Step 4: Version, commit, and establish GitHub Flow
+Tag the base as `v0.1.0` and adopt GitHub Flow for all future work.
+
+**What was done:**
+```
+git add . && git commit -m "feat: initial project setup ..."
+git tag -a v0.1.0 -m "v0.1.0 - Base project"
+```
+
+**GitHub Flow rules for this project:**
+
+1. **`main` is always deployable.** Everything on `main` has passing tests.
+2. **Create a feature branch for every change.**
+   ```
+   git checkout -b feature/short-description
+   ```
+3. **Write failing tests first (TDD red),** then implement to make them pass (green).
+4. **Commit often** with clear messages using conventional commits:
+   - `feat:` — new feature
+   - `fix:` — bug fix
+   - `refactor:` — code restructuring
+   - `test:` — adding/updating tests
+   - `docs:` — documentation changes
+   - `chore:` — tooling, dependencies, config
+5. **Open a Pull Request** when the feature is ready. PR should include:
+   - Summary of changes
+   - Test plan
+   - All E2E tests passing
+6. **Merge to `main`** via PR (squash or merge commit).
+7. **Tag releases** with semantic versioning:
+   ```
+   git tag -a v0.2.0 -m "v0.2.0 - Description of release"
+   ```
+
+**Version history:**
+| Version | Description |
+|---------|-------------|
+| v0.1.0  | Base: Angular shell layout, Dockerized TDD (Puppeteer + Jest), header/footer components |
+
 ---
 
 *This recipe is updated as the project evolves. Each step captures what we did and why.*
