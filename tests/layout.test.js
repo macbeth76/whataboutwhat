@@ -96,4 +96,27 @@ describe('Layout', () => {
       expect(versionText.trim()).toMatch(/[0-9a-f]{7,}/);
     });
   });
+
+  describe('Routing', () => {
+    it('renders the home page by default', async () => {
+      await page.goto(APP_URL, { waitUntil: 'networkidle0' });
+      await page.waitForSelector('[data-testid="home-page"]', { timeout: 10000 });
+      const text = await page.$eval('[data-testid="home-page"]', (el) => el.textContent);
+      expect(text).toContain('Welcome to whataboutwhat');
+    });
+
+    it('navigates to the about page via header link', async () => {
+      await page.click('header nav a[href="/about"]');
+      await page.waitForSelector('[data-testid="about-page"]', { timeout: 10000 });
+      const text = await page.$eval('[data-testid="about-page"]', (el) => el.textContent);
+      expect(text).toContain('Wise Owl Tech LLC');
+    });
+
+    it('navigates back to home via header link', async () => {
+      await page.click('header nav a[href="/"]');
+      await page.waitForSelector('[data-testid="home-page"]', { timeout: 10000 });
+      const homePage = await page.$('[data-testid="home-page"]');
+      expect(homePage).not.toBeNull();
+    });
+  });
 });

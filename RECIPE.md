@@ -91,6 +91,36 @@ git tag -a v0.1.0 -m "v0.1.0 - Base project"
 |---------|-------------|
 | v0.1.0  | Base: Angular shell layout, Dockerized TDD (Puppeteer + Jest), header/footer components |
 
+## Step 5: Fix critical issues, add routing, unit tests, and docs
+Review the project, fix gaps, and harden the foundation.
+
+**What was fixed:**
+1. **Stale unit test** — `app.spec.ts` was still testing scaffold `<h1>` tag; updated to test header/footer/main layout
+2. **No package-lock.json** — Ran `npm install` to generate deterministic lock file
+3. **Broken routing** — Added Home and About pages, wired routes, switched header links to `routerLink` with active styling
+4. **No component unit tests** — Added spec files for Header (6 tests), Footer (5 tests), Home (2 tests), About (2 tests)
+5. **No README** — Created `README.md` with quick start, project structure, testing, versioning, and branching docs
+
+**Files created:**
+- `src/app/pages/home/` — Home page component (welcome message)
+- `src/app/pages/about/` — About page component (Wise Owl Tech LLC info)
+- `src/app/components/header/header.spec.ts` — Header unit tests
+- `src/app/components/footer/footer.spec.ts` — Footer unit tests
+- `src/app/pages/home/home.spec.ts` — Home unit tests
+- `src/app/pages/about/about.spec.ts` — About unit tests
+- `README.md` — Project documentation
+- `package-lock.json` — Dependency lock file
+
+**Files modified:**
+- `src/app/app.spec.ts` — Fixed to match actual layout
+- `src/app/app.routes.ts` — Added Home and About routes
+- `src/app/components/header/header.ts` — Added RouterLink imports
+- `src/app/components/header/header.html` — Switched to routerLink with active class
+- `src/app/components/header/header.scss` — Added active link styling
+- `tests/layout.test.js` — Added 3 routing E2E tests
+
+**Result: 11 E2E tests passing + 18 unit tests.**
+
 ---
 
 *This recipe is updated as the project evolves. Each step captures what we did and why.*
